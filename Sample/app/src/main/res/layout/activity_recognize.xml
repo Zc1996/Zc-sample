@@ -25,19 +25,32 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-
-            <Button
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="选择图片"
-                android:textAllCaps="false"
-                android:id="@+id/buttonSelectImage"
-                android:onClick="selectImage"/>
-
+                android:layout_height="match_parent">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="选择图片"
+                    android:textAllCaps="false"
+                    android:id="@+id/buttonSelectImage"
+                    android:onClick="selectImage"/>
+                <Button
+                    android:id="@+id/data_statistic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="数据统计"/>
+                <Button
+                    android:id="@+id/prevention_method"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预防方法"/>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/selectedImage"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_toRightOf="@+id/image_control"
                 android:layout_toEndOf="@+id/image_control"

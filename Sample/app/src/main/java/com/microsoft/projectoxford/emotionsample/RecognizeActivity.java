@@ -92,6 +92,15 @@ public class RecognizeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognize);
+        Button preventionmethod = (Button) findViewById(R.id.prevention_method);
+        preventionmethod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://www.baidu.com"));
+                startActivity(intent);
+            }
+        });
 
         if (client == null) {
             client = new EmotionServiceRestClient(getString(R.string.subscription_key));
