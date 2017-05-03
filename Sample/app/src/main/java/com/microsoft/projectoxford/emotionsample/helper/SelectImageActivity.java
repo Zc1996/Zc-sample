@@ -35,17 +35,13 @@ package com.microsoft.projectoxford.emotionsample.helper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.microsoft.projectoxford.emotionsample.R;
-
-import java.io.File;
-import java.io.IOException;
+import com.microsoft.projectoxford.emotionsample.TakePhotoActivity;
 
 // The activity for the user to select a image and to detect faces in the image.
 public class SelectImageActivity extends ActionBarActivity {
@@ -104,7 +100,7 @@ public class SelectImageActivity extends ActionBarActivity {
 
     // When the button of "Take a Photo with Camera" is pressed.
     public void takePhoto(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -116,7 +112,18 @@ public class SelectImageActivity extends ActionBarActivity {
             } catch (IOException e) {
                 setInfo(e.getMessage());
             }
-        }
+        }*/
+        Intent intent = new Intent(SelectImageActivity.this, TakePhotoActivity.class);
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+        /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        try {
+            File file = File.createTempFile("IMG_", ".jpg", storageDir);
+            mUriPhotoTaken = Uri.fromFile(file);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
+            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+        } catch (IOException e) {
+            setInfo(e.getMessage());
+        }*/
     }
 
     // When the button of "Select a Photo in Album" is pressed.

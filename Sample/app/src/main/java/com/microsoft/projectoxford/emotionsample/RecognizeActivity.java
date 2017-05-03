@@ -33,6 +33,7 @@
 package com.microsoft.projectoxford.emotionsample;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -88,7 +89,10 @@ public class RecognizeActivity extends ActionBarActivity {
 
     private EmotionServiceClient client;
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer=null;
+
+    private String validFile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,7 @@ public class RecognizeActivity extends ActionBarActivity {
         mButtonStop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if(mediaPlayer.isPlaying()) {
+                if(mediaPlayer!=null&&mediaPlayer.isPlaying()) {
                     mediaPlayer.stop();
                 }
             }
@@ -116,6 +120,17 @@ public class RecognizeActivity extends ActionBarActivity {
         if (client == null) {
             client = new EmotionServiceRestClient(getString(R.string.subscription_key));
         }
+        Button mButtonStatic=(Button)findViewById(R.id.data_statistic);
+        mButtonStatic.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(RecognizeActivity.this,ShowImagesActivity.class);
+                intent.putExtra("uri",validFile);
+                startActivity(intent);
+            }
+        });
+        SharedPreferences pref=getSharedPreferences("data",MODE_PRIVATE);
+        validFile=pref.getString("uri","");
 
         mButtonSelectImage = (Button) findViewById(R.id.buttonSelectImage);
         mEditText = (EditText) findViewById(R.id.editTextResult);
@@ -367,6 +382,15 @@ public class RecognizeActivity extends ActionBarActivity {
                                 e.printStackTrace();
                             }
                             Toast.makeText(RecognizeActivity.this,"true",Toast.LENGTH_SHORT).show();
+                            if(validFile.equals("")){
+                                validFile=mImageUri.toString();
+                            }else if(!validFile.contains(mImageUri.toString())){
+                                validFile=validFile+"|"+mImageUri.toString();
+                            }else{
+                            }
+                            SharedPreferences.Editor editor=getSharedPreferences("data",MODE_PRIVATE).edit();
+                            editor.putString("uri",validFile);
+                            editor.commit();
                         }else{
                             Toast.makeText(RecognizeActivity.this,"false",Toast.LENGTH_SHORT).show();
                         }
