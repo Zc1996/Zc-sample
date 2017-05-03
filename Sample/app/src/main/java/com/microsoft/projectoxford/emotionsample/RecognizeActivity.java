@@ -88,6 +88,8 @@ public class RecognizeActivity extends ActionBarActivity {
 
     private EmotionServiceClient client;
 
+    private MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,15 @@ public class RecognizeActivity extends ActionBarActivity {
             }
         });
 
+        Button mButtonStop=(Button)findViewById(R.id.stop);
+        mButtonStop.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+            }
+        });
         if (client == null) {
             client = new EmotionServiceRestClient(getString(R.string.subscription_key));
         }
@@ -347,7 +358,7 @@ public class RecognizeActivity extends ActionBarActivity {
                         count++;
                         if(r.scores.neutral>0.7&&r.scores.anger<0.3){
                             try {
-                                MediaPlayer mediaPlayer = new MediaPlayer();
+                                mediaPlayer = new MediaPlayer();
                                 File file = new File(Environment.getExternalStorageDirectory(), "music.mp3");
                                 mediaPlayer.setDataSource(file.getPath());
                                 mediaPlayer.prepare();

@@ -46,6 +46,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="预防方法"/>
+                <Button
+                    android:id="@+id/stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="停止警示"/>
             </LinearLayout>
 
             <ImageView
