@@ -32,8 +32,11 @@
 //
 package com.microsoft.projectoxford.emotionsample;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -45,6 +48,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,12 +65,16 @@ import com.microsoft.projectoxford.emotion.contract.FaceRectangle;
 import com.microsoft.projectoxford.emotion.contract.RecognizeResult;
 import com.microsoft.projectoxford.emotion.rest.EmotionServiceException;
 import com.microsoft.projectoxford.emotionsample.helper.ImageHelper;
+import com.microsoft.projectoxford.emotionsample.helper.MyDatabaseHelper;
+import com.microsoft.projectoxford.emotionsample.helper.StatisticActivity;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 import com.microsoft.projectoxford.face.contract.Face;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -92,12 +100,14 @@ public class RecognizeActivity extends ActionBarActivity {
     private MediaPlayer mediaPlayer=null;
 
     private String validFile;
+    private String username;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognize);
+        username=getIntent().getStringExtra("username");
         Button preventionmethod = (Button) findViewById(R.id.prevention_method);
         preventionmethod.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,8 +134,10 @@ public class RecognizeActivity extends ActionBarActivity {
         mButtonStatic.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(RecognizeActivity.this,ShowImagesActivity.class);
+                /*Intent intent=new Intent(RecognizeActivity.this,ShowImagesActivity.class);
                 intent.putExtra("uri",validFile);
+                startActivity(intent);*/
+                Intent intent=new Intent(RecognizeActivity.this,StatisticActivity.class);
                 startActivity(intent);
             }
         });
@@ -206,7 +218,6 @@ public class RecognizeActivity extends ActionBarActivity {
                         // Show the image on screen.
                         ImageView imageView = (ImageView) findViewById(R.id.selectedImage);
                         imageView.setImageBitmap(mBitmap);
-
                         // Add detection log.
                         Log.d("RecognizeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
                                 + "x" + mBitmap.getHeight());
@@ -384,9 +395,11 @@ public class RecognizeActivity extends ActionBarActivity {
                             Toast.makeText(RecognizeActivity.this,"true",Toast.LENGTH_SHORT).show();
                             if(validFile.equals("")){
                                 validFile=mImageUri.toString();
+                                saveTime();
                             }else if(!validFile.contains(mImageUri.toString())){
+                                validFile=mImageUri.toString();
                                 validFile=validFile+"|"+mImageUri.toString();
-                            }else{
+                                saveTime();
                             }
                             SharedPreferences.Editor editor=getSharedPreferences("data",MODE_PRIVATE).edit();
                             editor.putString("uri",validFile);
@@ -403,5 +416,39 @@ public class RecognizeActivity extends ActionBarActivity {
 
             mButtonSelectImage.setEnabled(true);
         }
+    }
+
+    public void saveBitmapFile(Bitmap bitmap){
+        File file=new File("/mnt/sdcard/validPic/"+".jpg");
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveTime(){
+        Time t=new Time();
+        t.setToNow();
+        String str=""+t.year+t.month+t.monthDay+t.hour+t.minute+t.second;
+        //Toast.makeText(RecognizeActivity.this,str,Toast.LENGTH_SHORT).show();
+        MyDatabaseHelper dbHelper=new MyDatabaseHelper(this,"user.db",null,1);
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        Cursor cursor=db.rawQuery("select * from user where username =?",new String[]{username});
+        cursor.moveToFirst();
+        String date=cursor.getString(cursor.getColumnIndex("date"));
+        if(date.equals("")){
+            date=str;
+        }else {
+            date=date+"|"+str;
+        }
+        ContentValues values=new ContentValues();
+        values.put("date",date);
+        db.update("user",values,"username=?",new String[]{username});
+        cursor.close();
+        db.close();
     }
 }
