@@ -134,9 +134,6 @@ public class RecognizeActivity extends ActionBarActivity {
         mButtonStatic.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                /*Intent intent=new Intent(RecognizeActivity.this,ShowImagesActivity.class);
-                intent.putExtra("uri",validFile);
-                startActivity(intent);*/
                 Intent intent=new Intent(RecognizeActivity.this,StatisticActivity.class);
                 startActivity(intent);
             }
@@ -433,7 +430,7 @@ public class RecognizeActivity extends ActionBarActivity {
     public void saveTime(){
         Time t=new Time();
         t.setToNow();
-        String str=""+t.year+t.month+t.monthDay+t.hour+t.minute+t.second;
+        String str=t.year+"/"+t.month+"/"+t.monthDay+" "+t.hour+":"+t.minute+":"+t.second;
         //Toast.makeText(RecognizeActivity.this,str,Toast.LENGTH_SHORT).show();
         MyDatabaseHelper dbHelper=new MyDatabaseHelper(this,"user.db",null,1);
         SQLiteDatabase db=dbHelper.getWritableDatabase();

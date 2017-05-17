@@ -2,8 +2,10 @@ package com.microsoft.projectoxford.emotionsample.helper;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -83,13 +85,54 @@ public class StatisticActivity extends ActionBarActivity{
                 title.setVisibility(View.GONE);
             }
             container.addView(view);*/
-            TextView textView=new TextView(this);
+
             if(item.getTitle()){
-                textView.setText(item.getUsername()+"|"+item.getAge()+"|"+item.getSex());
+                /*LinearLayout linearLayout=new LinearLayout(this);
+                TextView tv1=new TextView(this);
+                TextView tv2=new TextView(this);
+                TextView tv3=new TextView(this);
+                *//*LinearLayout.LayoutParams lllp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                linearLayout.setLayoutParams(lllp);
+                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams lp1=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
+                LinearLayout.LayoutParams lp2=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
+                LinearLayout.LayoutParams lp3=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);*//*
+                *//*tv1.setLayoutParams(lp1);
+                tv2.setLayoutParams(lp2);
+                tv3.setLayoutParams(lp3);*//*
+                tv1.setText(item.getUsername());
+                tv2.setText(item.getAge());
+                tv3.setText(item.getSex());
+                tv1.setTextSize(18);
+                tv3.setTextSize(18);
+                tv3.setTextSize(18);
+                tv1.setGravity(Gravity.CENTER);
+                tv2.setGravity(Gravity.CENTER);
+                tv3.setGravity(Gravity.CENTER);
+                tv1.setTextColor(Color.BLACK);
+                tv2.setTextColor(Color.BLACK);
+                tv3.setTextColor(Color.BLACK);
+                linearLayout.addView(tv1);
+                linearLayout.addView(tv2);
+                linearLayout.addView(tv3);
+                container.addView(linearLayout);*/
+                TextView textView=new TextView(this);
+                String space="    ";
+                textView.setText(item.getUsername()+space+item.getAge()+space+item.getSex());
+                LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(lp);
+                textView.setTextSize(20);
+                textView.setTextColor(Color.BLACK);
+                container.addView(textView);
             }else{
+                TextView textView=new TextView(this);
                 textView.setText(item.getDate());
+                LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(lp);
+                textView.setTextSize(20);
+                textView.setTextColor(Color.BLACK);
+                container.addView(textView);
             }
-            container.addView(textView);
         }
         //adapter.notifyDataSetChanged();
     }

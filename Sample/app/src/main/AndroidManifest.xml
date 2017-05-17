@@ -23,7 +23,6 @@
         </intent-filter>
         </activity>
         <activity android:name=".TakePhotoActivity"></activity>
-        <activity android:name=".ShowImagesActivity"></activity>
         <activity android:name=".RegActivity"></activity>
         <activity android:name=".helper.StatisticActivity"></activity>
 
