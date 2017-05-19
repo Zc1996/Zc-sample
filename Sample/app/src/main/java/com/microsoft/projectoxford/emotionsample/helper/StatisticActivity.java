@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.microsoft.projectoxford.emotionsample.R;
@@ -23,6 +24,8 @@ public class StatisticActivity extends ActionBarActivity{
     /*private ListView listView;
     private ArrayAdapter<StatisticItem> adapter;*/
     private List<StatisticItem> data;
+    private int []stats=new int[10];
+    private int sum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,10 @@ public class StatisticActivity extends ActionBarActivity{
         setContentView(R.layout.activity_statistics);
         //listView=(ListView)findViewById(R.id.listView);
         data=new ArrayList<StatisticItem>();
+        for(int i=0;i<10;i++){
+            stats[i]=0;
+        }
+        sum=0;
         //adapter=new ArrayAdapter<StatisticItem>(StatisticActivity.this,R.layout.list_view_item,data);
         //listView.setAdapter(adapter);
         initial();
@@ -59,6 +66,19 @@ public class StatisticActivity extends ActionBarActivity{
                     item.setTitle(false);
                     item.setDate(t);
                     data.add(item);
+                    String []str;
+                    str=t.split(" ");
+                    String []time;
+                    time=str[1].split(":");
+                    int hour=Integer.parseInt(time[0]);
+                    int minute=Integer.parseInt(time[1]);
+                    int cur=-1;
+                    if(hour>=12&&hour<17){
+                        sum++;
+                        cur=(hour-12)*2;
+                        if(minute>=30) cur++;
+                    }
+                    if(cur!=-1) stats[cur]++;
                 }
             }
         }
@@ -134,6 +154,24 @@ public class StatisticActivity extends ActionBarActivity{
                 container.addView(textView);
             }
         }
+        RelativeLayout chartContainer=(RelativeLayout)findViewById(R.id.chartContainer);
+        final  TextView []tv=new TextView[10];
+        tv[0]=(TextView)findViewById(R.id.chart0);
+        tv[1]=(TextView)findViewById(R.id.chart1);
+        tv[2]=(TextView)findViewById(R.id.chart2);
+        tv[3]=(TextView)findViewById(R.id.chart3);
+        tv[4]=(TextView)findViewById(R.id.chart4);
+        tv[5]=(TextView)findViewById(R.id.chart5);
+        tv[6]=(TextView)findViewById(R.id.chart6);
+        tv[7]=(TextView)findViewById(R.id.chart7);
+        tv[8]=(TextView)findViewById(R.id.chart8);
+        tv[9]=(TextView)findViewById(R.id.chart9);
+        //String t="";
+        for(int i=0;i<10;i++){
+            tv[i].getLayoutParams().height=100*stats[i]/sum;
+            //t+="|"+stats[i];
+        }
+        //Toast.makeText(StatisticActivity.this,t,Toast.LENGTH_SHORT).show();
         //adapter.notifyDataSetChanged();
     }
 }
